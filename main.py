@@ -79,12 +79,19 @@ for ticker in TICKERS:
     </div>
     """
 
-email_body += """
-    <hr style="border: none; border-top: 2px solid #0066cc; margin-top: 40px;">
-    <p style="text-align: center; color: #999; font-size: 11px; ">
-        This is an automated report. Do not reply to this email.
+email_body += f"""
+<div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 12px; border-radius: 8px; background-color: #fff; font-family: Arial, sans-serif;">
+    <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #000;">{res['ticker']}</h3>
+    <p style="margin: 0 0 16px 0; font-size: 15px; color: #333;">
+        Price: <b>{res['price']:.2f}</b> &nbsp;|&nbsp; RSI: <b>{res['rsi']:.2f}</b>
     </p>
-</body></html>
+    <hr style="border: none; border-top: 1px solid #eee; margin: 0 0 14px 0;">
+    <p style="margin: 0; font-size: 14px; line-height: 2; color: #333;">
+        Status: <b style="color: {zone_color};">{zone_text}</b><br>
+        Event: <b>{res['cdc_event']}</b><br>
+        Duration: <b>{res['zone_days']} days</b>
+    </p>
+</div>
 """
 
 # --- Send email ---
