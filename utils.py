@@ -1,3 +1,5 @@
+import yfinance as yf
+
 def check_strategy(ticker):
     stock = yf.Ticker(ticker)
     data = stock.history(period="100d")
@@ -31,7 +33,7 @@ def check_strategy(ticker):
     else:
         event = "Continuing Trend"
 
-    # --- นับจำนวนวันใน Zone ปัจจุบัน (แก้ bug groupby) ---
+    # --- นับจำนวนวันใน Zone ปัจจุบัน ---
     group_id = (data['Is_Buy_Zone'] != data['Is_Buy_Zone'].shift()).cumsum()
     data['Zone_Days'] = data.groupby(group_id).cumcount() + 1
 
