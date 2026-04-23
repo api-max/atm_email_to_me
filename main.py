@@ -43,7 +43,7 @@ email_body = """
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 16px;">
+<body style="font-family: Arial, sans-serif; background-color: #ffffff; margin: 0; padding: 16px;">
 <h1 style="font-size: 22px; color: #333;">📊 Daily Strategy Report</h1>
 <p style="color: #666; font-size: 12px;">Generated automatically by Investment Bot</p>
 """
