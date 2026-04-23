@@ -1,10 +1,15 @@
 # ... (ใน loop ของ main.py) ...
     res = check_strategy(ticker)
-    
+
+    # Guard: ข้ามถ้าดึงข้อมูลไม่ได้ (data ว่างหรือไม่พอคำนวณ)
+    if res is None:
+        print(f"[WARN] Skipping {ticker}: insufficient data")
+        continue
+
     # กำหนดสี
     zone_color = "green" if res['is_buy_zone'] else "red"
     zone_text = "BUY ZONE" if res['is_buy_zone'] else "SELL ZONE"
-    
+
     email_body += f"""
     <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 10px; font-family: sans-serif;">
         <h2 style="margin-top: 0;">{res['ticker']}</h2>
