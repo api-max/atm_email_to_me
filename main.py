@@ -1,24 +1,21 @@
-from utils import check_strategy, send_email
-
-assets = ["BTC-USD", "ADVANC.BK"]
-email_body = "<html><body><h2>Market Signal Report</h2>"
-
-for ticker in assets:
+# ... (ใน loop ของ main.py) ...
     res = check_strategy(ticker)
     
-    # สร้างเงื่อนไข
-    is_buy = (res['rsi'] < 30) or (res['is_buy_zone'] and res['zone_days'] <= 15)
-    color = "red" if is_buy else "black"
-    signal_text = "BUY SIGNAL" if is_buy else "Wait / Hold"
+    # กำหนดสี
+    zone_color = "green" if res['is_buy_zone'] else "red"
+    zone_text = "BUY ZONE" if res['is_buy_zone'] else "SELL ZONE"
     
-    # ออกแบบ Layout
     email_body += f"""
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 8px;">
-        <h3 style="margin: 0;">{res['ticker']}</h3>
-        <p style="margin: 5px 0;">Price: <b>{res['price']:.2f}</b> | RSI: <b>{res['rsi']:.2f}</b></p>
-        <p style="margin: 5px 0; color: {color};">Status: <b>{signal_text}</b></p>
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 10px; font-family: sans-serif;">
+        <h2 style="margin-top: 0;">{res['ticker']}</h2>
+        <div style="font-size: 16px;">
+            Price: <b>{res['price']:.2f}</b> | RSI: <b>{res['rsi']:.2f}</b>
+        </div>
+        <hr>
+        <div style="margin-top: 10px;">
+            Status: <b style="color: {zone_color};">{zone_text}</b><br>
+            Event: <b>{res['cdc_event']}</b><br>
+            Duration: <b>{res['zone_days']} days</b>
+        </div>
     </div>
     """
-
-email_body += "</body></html>"
-send_email("Daily Investment Update", email_body)
