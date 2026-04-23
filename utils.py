@@ -4,6 +4,7 @@ import pandas as pd
 def check_strategy(ticker):
     stock = yf.Ticker(ticker)
     data = stock.history(period="100d")
+    data = data.dropna(subset=['Close'])
     print(f"[DEBUG] {ticker} columns: {data.columns.tolist()}")
     print(f"[DEBUG] {ticker} sample:\n{data[['Close']].tail(3)}")
 
