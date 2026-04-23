@@ -4,8 +4,8 @@ import pandas as pd
 def check_strategy(ticker):
     stock = yf.Ticker(ticker)
     data = stock.history(period="100d")
-        print(f"[DEBUG] {ticker} columns: {data.columns.tolist()}")
-        print(f"[DEBUG] {ticker} sample:\n{data[['Close']].tail(3)}")
+    print(f"[DEBUG] {ticker} columns: {data.columns.tolist()}")
+    print(f"[DEBUG] {ticker} sample:\n{data[['Close']].tail(3)}")
 
     if data.empty or len(data) < 27:
         return None
