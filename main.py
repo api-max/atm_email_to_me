@@ -40,58 +40,45 @@ TICKERS = [
 # --- Build email body ---
 email_body = """
 <html>
-
-    
-
-<body style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
-<h1 style="text-align: center; color: #333; font-weight: 700;">📊 Daily Portfolio Strategy Report</h1>
-<p style="text-align: center; color: #666; font-size: 12px; font-weight: 400;">Generated automatically by Investment Bot</p>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 16px;">
+<h1 style="font-size: 22px; color: #333;">📊 Daily Strategy Report</h1>
+<p style="color: #666; font-size: 12px;">Generated automatically by Investment Bot</p>
 """
 
 for ticker in TICKERS:
     res = check_strategy(ticker)
 
-    # Guard: ข้ามถ้าดึงข้อมูลไม่ได้หรือ data ไม่พอคำนวณ
     if res is None:
         print(f"[WARN] Skipping {ticker}: insufficient data")
         continue
 
-    # กำหนดสี
     zone_color = "green" if res['is_buy_zone'] else "red"
     zone_text  = "BUY ZONE" if res['is_buy_zone'] else "SELL ZONE"
-    
-    # เลือกสีสำหรับ event
     event_color = "#28a745" if "Up" in res['cdc_event'] else "#dc3545" if "Down" in res['cdc_event'] else "#6c757d"
 
     email_body += f"""
-    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 12px; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h3 style="margin-top: 0; color: #333; font-weight: 700; ">{res['ticker']}</h3>
-        <div style="font-size: 16px; line-height: 1.8; ">
-            <strong>Price:</strong> {res['price']:.2f} | 
-            <strong>RSI:</strong> <span style="color: {'#dc3545' if res['rsi'] > 70 else '#28a745' if res['rsi'] < 30 else '#0066cc'};">{res['rsi']:.2f}</span>
-        </div>
-        <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
-        <div style="margin-top: 10px; line-height: 1.8; ">
-            <strong>Status:</strong> <span style="color: {zone_color}; font-weight: 700; padding: 5px 10px; border-radius: 4px; background-color: {'#e8f5e9' if zone_color == 'green' else '#ffebee'};">{zone_text}</span><br>
-            <strong>Event:</strong> <span style="color: {event_color}; font-weight: 700;">{res['cdc_event']}</span><br>
-            <strong>Duration:</strong> {res['zone_days']} days in {zone_text}
-        </div>
+    <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 12px; border-radius: 8px; background-color: #fff; font-family: Arial, sans-serif;">
+        <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #000;">{res['ticker']}</h3>
+        <p style="margin: 0 0 16px 0; font-size: 15px; color: #333;">
+            Price: <b>{res['price']:.2f}</b> &nbsp;|&nbsp; RSI: <b>{res['rsi']:.2f}</b>
+        </p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 0 0 14px 0;">
+        <p style="margin: 0; font-size: 14px; line-height: 2; color: #333;">
+            Status: <b style="color: {zone_color};">{zone_text}</b><br>
+            Event: <b style="color: {event_color};">{res['cdc_event']}</b><br>
+            Duration: <b>{res['zone_days']} days</b>
+        </p>
     </div>
     """
 
-email_body += f"""
-<div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 12px; border-radius: 8px; background-color: #fff; font-family: Arial, sans-serif;">
-    <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #000;">{res['ticker']}</h3>
-    <p style="margin: 0 0 16px 0; font-size: 15px; color: #333;">
-        Price: <b>{res['price']:.2f}</b> &nbsp;|&nbsp; RSI: <b>{res['rsi']:.2f}</b>
+email_body += """
+    <p style="text-align: center; color: #999; font-size: 11px; margin-top: 24px;">
+        This is an automated report. Do not reply to this email.
     </p>
-    <hr style="border: none; border-top: 1px solid #eee; margin: 0 0 14px 0;">
-    <p style="margin: 0; font-size: 14px; line-height: 2; color: #333;">
-        Status: <b style="color: {zone_color};">{zone_text}</b><br>
-        Event: <b>{res['cdc_event']}</b><br>
-        Duration: <b>{res['zone_days']} days</b>
-    </p>
-</div>
+</body></html>
 """
 
 # --- Send email ---
