@@ -1,10 +1,19 @@
 import yfinance as yf
+import pandas as pd
 
 def check_strategy(ticker):
     stock = yf.Ticker(ticker)
     data = stock.history(period="100d")
 
     if data.empty or len(data) < 27:
+        return None
+
+    # --- Flatten multi-level columns (แก้ปัญหาหุ้นไทย NaN) ---
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
+
+    # --- ตรวจสอบว่ามีคอลัมน์ Close จริงๆ ---
+    if 'Close' not in data.columns or data['Close'].isnull().all():
         return None
 
     # --- คำนวณ RSI (14-period) ---
